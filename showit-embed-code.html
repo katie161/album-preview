@@ -217,7 +217,8 @@
 #ab-root .ab-note{font-size:11px;color:var(--ab-muted);margin-top:8px}
 
 /* size tiles */
-#ab-root .ab-sizes{display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px 14px}
+#ab-root .ab-sizes{display:flex;flex-direction:column;gap:14px}
+#ab-root .ab-sizerow{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:14px}
 #ab-root .ab-size{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--ab-muted);display:flex;flex-direction:column;align-items:flex-start;gap:5px}
 #ab-root .ab-size .box{display:flex;align-items:center;justify-content:center;background:var(--ab-tile);border:1px solid var(--ab-line);transition:background .2s,border-color .2s}
 #ab-root .ab-size:hover .box{border-color:var(--ab-muted)}
@@ -512,16 +513,34 @@ window.AB_START = function(){
 
   function sizeTiles(){
     var el = $('ab-sizes'); el.innerHTML = '';
-    var px = root.clientWidth < 560 ? 5.6 : 8.2; // pixels per inch for the tiles
-    CONFIG.sizes.forEach(function(s, i){
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'ab-size' + (state.size === i ? ' on' : '');
-      b.setAttribute('aria-label', s.label);
-      b.innerHTML = '<span class="box" style="width:'+(s.w*px)+'px;height:'+(s.h*px)+'px">'+CHECK+'</span><span class="lbl">'+s.label+'</span>';
-      b.onclick = function(){ state.size = i; render(); };
-      el.appendChild(b);
+    // squares on one row, verticals on the next; tiles scale to fit the width of the options column
+    var rows = [CONFIG.sizes.filter(function(s){ return s.w === s.h; }),
+                CONFIG.sizes.filter(function(s){ return s.w !== s.h; })];
+    var gap = 14, avail = el.clientWidth || root.clientWidth - 40;
+    var px = 8.2;   // pixels per inch, at most
+    var allInches = CONFIG.sizes.reduce(function(t, s){ return t + s.w; }, 0);
+    if (allInches * px + gap * (CONFIG.sizes.length - 1) + 2 <= avail) rows = [CONFIG.sizes.slice()];   // wide screens: everything on one line
+    rows.forEach(function(row){
+      if (!row.length) return;
+      var inches = row.reduce(function(t, s){ return t + s.w; }, 0);
+      px = Math.min(px, (avail - gap * (row.length - 1) - 2) / inches);
     });
+    rows.forEach(function(row){
+      if (!row.length) return;
+      var line = document.createElement('div'); line.className = 'ab-sizerow';
+      row.forEach(function(s){
+        var i = CONFIG.sizes.indexOf(s);
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ab-size' + (state.size === i ? ' on' : '');
+        b.setAttribute('aria-label', s.label);
+        b.innerHTML = '<span class="box" style="width:'+(s.w*px)+'px;height:'+(s.h*px)+'px">'+CHECK+'</span><span class="lbl">'+s.label+'</span>';
+        b.onclick = function(){ state.size = i; render(); };
+        line.appendChild(b);
+      });
+      el.appendChild(line);
+    });
+    el._w = el.clientWidth;
   }
 
   function render(){
@@ -727,6 +746,13 @@ window.AB_START = function(){
     var y = $('ab-album').getBoundingClientRect().top + (window.pageYOffset || 0) - 20;
     try { window.scrollTo({ top: y, behavior: 'smooth' }); } catch(e){ window.scrollTo(0, y); }
   });
+  (function(){
+    var el = $('ab-sizes');
+    function check(){ if (el.clientWidth && el.clientWidth !== el._w) sizeTiles(); }
+    if (window.ResizeObserver) new ResizeObserver(check).observe(el);
+    window.addEventListener('resize', check);
+    setTimeout(check, 300);
+  })();
   $('ab-pick').addEventListener('click', function(){ state.pickerOpen = !state.pickerOpen; if (state.pickerOpen) state.tab = state.coll; render(); });
   $('ab-close').addEventListener('click', function(){ state.pickerOpen = false; render(); });
   $('ab-overlay').addEventListener('click', function(e){ if (e.target === this){ state.pickerOpen = false; render(); } });
