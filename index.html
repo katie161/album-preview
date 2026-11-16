@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
 
 <div id="ab-root">
+  <div class="ab-bleed" id="ab-bleed" aria-hidden="true"></div>
   <div class="ab-mini" id="ab-mini" aria-hidden="true"><div class="ab-mini-thumb" id="ab-mini-thumb"></div><div class="ab-mini-txt" id="ab-mini-txt"></div><button type="button" class="ab-mini-up" id="ab-mini-up">View</button></div>
   <div class="ab-overlay" id="ab-overlay">
     <div class="ab-sheet" id="ab-sheet" role="dialog" aria-label="Select your design">
@@ -96,6 +97,9 @@
   width:100%; height:100%; box-sizing:border-box; padding:28px;
 }
 #ab-root,#ab-root *{overflow-anchor:none}
+#ab-root{isolation:isolate}
+/* background colour stretched to the full width of the screen, behind the tool */
+#ab-root .ab-bleed{position:absolute;top:0;bottom:0;left:0;width:100%;z-index:-1;background:var(--ab-bg);pointer-events:none}
 #ab-root *{box-sizing:border-box;margin:0}
 #ab-root .ab-wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:start;max-width:1140px;margin:0 auto}
 #ab-root .ab-preview{position:relative}
@@ -757,6 +761,20 @@ window.AB_START = function(){
     if (window.ResizeObserver) new ResizeObserver(check).observe(el);
     window.addEventListener('resize', check);
     setTimeout(check, 300);
+  })();
+  // stretch the background to the edges of the screen, whatever the embed box width
+  (function(){
+    var bl = $('ab-bleed');
+    function bleed(){
+      var vw = document.documentElement.clientWidth || window.innerWidth;
+      var r = root.getBoundingClientRect(), scale = r.width / (root.offsetWidth || r.width) || 1;
+      bl.style.left = (-r.left / scale) + 'px';
+      bl.style.width = (vw / scale) + 'px';
+    }
+    bleed();
+    window.addEventListener('resize', bleed);
+    if (window.ResizeObserver) new ResizeObserver(bleed).observe(root);
+    setTimeout(bleed, 300); setTimeout(bleed, 1500);
   })();
   $('ab-pick').addEventListener('click', function(){ state.pickerOpen = !state.pickerOpen; if (state.pickerOpen) state.tab = state.coll; render(); });
   $('ab-close').addEventListener('click', function(){ state.pickerOpen = false; render(); });
