@@ -98,7 +98,7 @@
 #ab-root,#ab-root *{overflow-anchor:none}
 #ab-root *{box-sizing:border-box;margin:0}
 #ab-root .ab-wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:start;max-width:1140px;margin:0 auto}
-#ab-root .ab-preview{position:sticky;top:20px}
+#ab-root .ab-preview{position:relative}
 #ab-root .ab-controls{position:relative;max-height:var(--ab-panel-h);overflow-y:auto;padding-right:14px;padding-bottom:220px;scrollbar-width:thin;scrollbar-color:var(--ab-muted) transparent}
 #ab-root .ab-ctrlwrap{position:relative;min-width:0}
 @container (max-width:760px){
@@ -274,8 +274,9 @@
 /* phones: small album preview pinned to the top of the screen while scrolling the options */
 #ab-root .ab-mini{position:fixed;left:0;right:0;top:0;z-index:40;display:flex;align-items:center;gap:14px;padding:10px 16px;
   background:rgba(243,241,237,.97);border-bottom:1px solid var(--ab-line);box-shadow:0 6px 18px -10px rgba(40,30,20,.35);
-  transform:translateY(-110%);transition:transform .25s ease;pointer-events:none}
-#ab-root .ab-mini.show{transform:none;pointer-events:auto}
+  display:none}
+#ab-root .ab-mini.show{display:flex;animation:abMiniIn .25s ease}
+@keyframes abMiniIn{from{transform:translateY(-100%)}to{transform:none}}
 #ab-root .ab-mini-thumb{height:92px;flex:none;display:flex;align-items:center}
 #ab-root .ab-mini-thumb .ab-album{transition:none!important}
 #ab-root .ab-mini-thumb .ab-pages{display:none}
