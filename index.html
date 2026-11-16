@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Album Preview</title><style>html,body{margin:0;background:#f3f1ed}</style></head>
+<body>
+<!-- ===== ALBUM PREVIEW &#8212; paste everything below into a Showit "Embed Code" element ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+
+<div id="ab-root">
+  <div class="ab-mini" id="ab-mini" aria-hidden="true"><div class="ab-mini-thumb" id="ab-mini-thumb"></div><div class="ab-mini-txt" id="ab-mini-txt"></div><button type="button" class="ab-mini-up" id="ab-mini-up">View</button></div>
+  <div class="ab-overlay" id="ab-overlay">
+    <div class="ab-sheet" id="ab-sheet" role="dialog" aria-label="Select your design">
+      <div class="ab-sheet-head"><span>Select your design</span><button type="button" class="ab-close" id="ab-close" aria-label="Close">&times;</button></div>
+      <div class="ab-tabs" id="ab-tabs"></div>
+      <div class="ab-designs" id="ab-designs"></div>
+    </div>
+  </div>
+  <div class="ab-wrap">
+    <div class="ab-preview">
+      <div class="ab-stage">
+        <!-- closed album -->
+        <div class="ab-album" id="ab-album">
+          <div class="ab-pages"></div>
+          <div class="ab-cover" id="ab-cover">
+            <div class="ab-tex"></div>
+            <div class="ab-spine"></div>
+            <div class="ab-mark" id="ab-mark"><div class="ab-ink" id="ab-ink"></div></div>
+          </div>
+        </div>
+        <!-- open album (inside cover + endsheet) -->
+        <div class="ab-open" id="ab-open">
+          <div class="ab-board" id="ab-board"><div class="ab-tex"></div><div class="ab-endsheet ab-es-l" id="ab-esl"></div></div>
+          <div class="ab-flyleaf" id="ab-esr"></div>
+        </div>
+      </div>
+      <div class="ab-summary" id="ab-summary"></div>
+    </div>
+
+    <div class="ab-ctrlwrap">
+    <div class="ab-controls">
+      <div class="ab-group ab-first">
+        <div class="ab-label">Album size</div>
+        <div class="ab-sizes" id="ab-sizes"></div>
+      </div>
+
+
+      <div class="ab-group">
+        <div class="ab-label">Cover type</div>
+        <div class="ab-btns ab-covers" id="ab-covers"></div>
+      </div>
+
+      <div class="ab-group" id="ab-colorgroup">
+        <div class="ab-label" id="ab-colorname"></div>
+        <div id="ab-colors"></div>
+      </div>
+
+
+      <div class="ab-group" id="ab-persgroup">
+        <div class="ab-label">Cover personalization</div>
+        <div class="ab-btns" id="ab-finishes"></div>
+        <div class="ab-label ab-sub">Cover design</div>
+        <div class="ab-textgroup" id="ab-textgroup">
+          <button type="button" class="ab-pick" id="ab-pick">
+            <span class="ab-pick-thumb" id="ab-pick-thumb"></span>
+            <span class="ab-pick-txt"><small>Select your design</small><span id="ab-pick-name"></span></span>
+            <svg class="ab-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="ab-case" id="ab-casegroup">
+            <div class="ab-label ab-sub">Lettering</div>
+            <div class="ab-btns" id="ab-case"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<style>
+#ab-root{
+  /* ---- Brand settings: change these to match your site ---- */
+  --ab-bg:#f3f1ed;
+  --ab-ink:#3a3836;
+  --ab-muted:#8d8983;
+  --ab-line:#dedad3;
+  --ab-tile:#f8f7f4;
+  --ab-on:#6e6c69;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --ab-panel-h:860px;   /* desktop: height of the options column (it scrolls inside) */
+  --ab-heading:'Cormorant Garamond', Georgia, serif;
+  --ab-body:'Montserrat', Helvetica, Arial, sans-serif;
+  /* --------------------------------------------------------- */
+  container-type:inline-size;
+  background:var(--ab-bg); color:var(--ab-ink);
+  font-family:var(--ab-body); font-size:13px; line-height:1.4;
+  width:100%; height:100%; box-sizing:border-box; padding:28px;
+}
+#ab-root,#ab-root *{overflow-anchor:none}
+#ab-root *{box-sizing:border-box;margin:0}
+#ab-root .ab-wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:44px;align-items:start;max-width:1140px;margin:0 auto}
+#ab-root .ab-preview{position:sticky;top:20px}
+#ab-root .ab-controls{position:relative;max-height:var(--ab-panel-h);overflow-y:auto;padding-right:14px;padding-bottom:220px;scrollbar-width:thin;scrollbar-color:var(--ab-muted) transparent}
+#ab-root .ab-ctrlwrap{position:relative;min-width:0}
+@container (max-width:760px){
+  #ab-root .ab-wrap{grid-template-columns:1fr;gap:16px}
+  #ab-root .ab-preview{position:static}
+  #ab-root .ab-controls{max-height:none;overflow:visible;padding-right:0;padding-bottom:0}
+  #ab-root #ab-colors{max-height:430px;overflow-y:auto}
+}
+
+/* ---------- preview ---------- */
+#ab-root .ab-views{display:flex;justify-content:center;gap:4px;margin-bottom:6px}
+#ab-root .ab-stage{position:relative;aspect-ratio:4/5;width:100%;display:flex;align-items:center;justify-content:center}
+#ab-root .ab-album{position:relative;width:var(--aw,50%);aspect-ratio:var(--ar,1)}
+#ab-root.ab-ready .ab-album{transition:width .45s cubic-bezier(.3,.7,.3,1)}
+#ab-root .ab-pages{position:absolute;inset:2% -1.6% -1.6% 2%;background:linear-gradient(90deg,#efebe4,#fbfaf7 30%,#ece7df);border-radius:2px;
+  box-shadow:0 18px 30px -12px rgba(40,30,20,.35)}
+#ab-root .ab-cover{position:absolute;inset:0;border-radius:3px;overflow:hidden;container-type:inline-size;
+  background-color:var(--cover,#ccc);background-size:var(--bgs,cover);background-position:var(--bgp,center);
+  box-shadow:0 22px 40px -18px rgba(40,30,20,.55),0 2px 6px rgba(40,30,20,.18)}
+#ab-root.ab-ready .ab-cover{transition:background-color .35s}
+#ab-root .ab-tex{position:absolute;inset:0;pointer-events:none}
+#ab-root .has-photo .ab-tex{display:none}
+#ab-root .ab-cover{background-blend-mode:var(--blend,normal)}
+#ab-root .ab-ink{background-blend-mode:var(--blend-ink,normal)}
+#ab-root .ab-cover.mockup .ab-spine{display:none}
+#ab-root .ab-cover.mockup{border-radius:1px;box-shadow:0 18px 36px -16px rgba(40,30,20,.35),0 2px 6px rgba(40,30,20,.12)}
+#ab-root .ab-album.mockup .ab-pages{display:none}
+#ab-root .ab-spine{position:absolute;top:0;bottom:0;left:0;width:7%;
+  background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(0,0,0,.05) 70%,rgba(255,255,255,.12) 92%,rgba(0,0,0,.15))}
+#ab-root .photo-cover .ab-spine{width:5%;background:linear-gradient(90deg,rgba(0,0,0,.35),rgba(0,0,0,.08) 60%,rgba(255,255,255,.18) 90%,rgba(0,0,0,.2))}
+
+/* textures (used on the cover when no photo is set, and on the cover-type buttons) */
+#ab-root .t-luxe-linen{background-image:
+  repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 2px),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.07) 0 1px,transparent 1px 2px),
+  linear-gradient(135deg,rgba(255,255,255,.1),transparent 50%,rgba(0,0,0,.1))}
+#ab-root .t-classic-linen{background-image:
+  repeating-linear-gradient(0deg,rgba(255,255,255,.09) 0 2px,transparent 2px 4px),
+  repeating-linear-gradient(90deg,rgba(0,0,0,.09) 0 2px,transparent 2px 4px),
+  linear-gradient(135deg,rgba(255,255,255,.08),transparent 50%,rgba(0,0,0,.1))}
+#ab-root .t-fabric{background-image:
+  repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px,rgba(255,255,255,.08) 3px 4px),
+  linear-gradient(135deg,rgba(255,255,255,.08),transparent 50%,rgba(0,0,0,.1))}
+#ab-root .t-luxe-leather{background-image:
+  radial-gradient(rgba(0,0,0,.13) 1.2px,transparent 2px),
+  radial-gradient(rgba(255,255,255,.07) 1.2px,transparent 2px),
+  linear-gradient(135deg,rgba(255,255,255,.18),transparent 45%,rgba(0,0,0,.2));
+  background-size:6px 6px,9px 9px,100% 100%}
+#ab-root .t-leather{background-image:
+  radial-gradient(rgba(0,0,0,.10) 1px,transparent 1.5px),
+  radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.5px),
+  linear-gradient(135deg,rgba(255,255,255,.14),transparent 45%,rgba(0,0,0,.16));
+  background-size:4px 4px,6px 6px,100% 100%}
+#ab-root .t-vegan-leather{background-image:
+  radial-gradient(rgba(0,0,0,.07) 1px,transparent 1.4px),
+  linear-gradient(135deg,rgba(255,255,255,.22),transparent 40%,rgba(0,0,0,.14));
+  background-size:3px 3px,100% 100%}
+#ab-root .t-vegan-suede{background-image:
+  radial-gradient(rgba(255,255,255,.06) .6px,transparent 1px),
+  linear-gradient(120deg,rgba(255,255,255,.12),transparent 40%,rgba(0,0,0,.16) 75%,rgba(255,255,255,.06));
+  background-size:2px 2px,100% 100%}
+#ab-root .t-photo{background-image:linear-gradient(135deg,#d8d6d2,#a9a6a1 60%,#8f8b85)}
+
+/* photo-cover placeholder */
+#ab-root .ab-cover.photo-cover:not(.has-photo){background-color:#cfccc7}
+#ab-root .ab-cover.photo-cover:not(.has-photo) .ab-tex{background:
+  linear-gradient(160deg,rgba(255,255,255,.35),transparent 55%),
+  radial-gradient(circle at 30% 35%,#e9e6e1 0 9%,transparent 10%),
+  linear-gradient(170deg,transparent 58%,#b5b1ab 58% 70%,#a39f98 70%)}
+
+/* cover design stamp \002014 the design image is used as a stencil, so it takes on the chosen finish */
+#ab-root .ab-mark{position:absolute;inset:0;pointer-events:none}
+#ab-root .ab-ink{position:absolute;inset:0;
+  padding:var(--pad-t,25%) var(--pad-r,30%) var(--pad-t,25%) var(--pad-l,22%);
+  -webkit-mask-image:var(--design);mask-image:var(--design);
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-origin:content-box;mask-origin:content-box;
+  -webkit-mask-clip:content-box;mask-clip:content-box;
+  background-origin:border-box;background-size:var(--bgs,cover);background-position:var(--bgp,center)}
+#ab-root .ab-mark.fin-none{display:none}
+/* debossed: pressed into the material \002014 darker, shadow on top edge */
+#ab-root .fin-deboss .ab-ink{background-color:var(--cover);background-image:linear-gradient(rgba(0,0,0,.30),rgba(0,0,0,.30)),var(--coverimg,none)}
+#ab-root .ab-mark.fin-deboss{filter:drop-shadow(0 1px 0 rgba(255,255,255,.30)) drop-shadow(0 -.5px 0 rgba(0,0,0,.45))}
+/* embossed: raised \002014 lighter, highlight on top, shadow below */
+#ab-root .fin-emboss .ab-ink{background-color:var(--cover);background-image:linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)),var(--coverimg,none)}
+#ab-root .ab-mark.fin-emboss{filter:drop-shadow(-.5px -1px 0 rgba(255,255,255,.45)) drop-shadow(1px 1.5px 1px rgba(0,0,0,.45))}
+/* foils \002014 color and sheen sampled from real foil-stamped covers; sits on top of the material */
+#ab-root .ab-mark.fin-gold,#ab-root .ab-mark.fin-silver,#ab-root .ab-mark.fin-rose{filter:drop-shadow(0 .6px .5px rgba(0,0,0,.22))}
+#ab-root .fin-gold .ab-ink,#ab-root .fin-silver .ab-ink,#ab-root .fin-rose .ab-ink{
+  background-origin:content-box;background-clip:content-box;background-size:160px 160px,100% 100%;background-position:0 0,center;
+  background-blend-mode:soft-light,normal;background-image:var(--grain),var(--foil)}
+#ab-root .fin-gold .ab-ink{--foil:var(--foil-gold);background-color:#ead592}
+#ab-root .fin-silver .ab-ink{--foil:var(--foil-silver);background-color:#e4e7eb}
+#ab-root .fin-rose .ab-ink{--foil:var(--foil-rose);background-color:#e3bfae}
+#ab-root .fin-white .ab-ink{background:#fff}
+#ab-root .ab-mark.fin-white{filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+
+/* open view */
+#ab-root .ab-open{display:none;position:relative;width:var(--ow,90%);aspect-ratio:var(--oar,2)}
+#ab-root .view-open .ab-album{display:none}
+#ab-root .view-open .ab-open{display:flex}
+#ab-root .ab-board{position:relative;flex:1;border-radius:3px 0 0 3px;background-color:var(--cover,#ccc);background-size:230px 230px;background-position:0 0;overflow:hidden;
+  box-shadow:0 22px 40px -18px rgba(40,30,20,.5)}
+#ab-root .ab-endsheet{position:absolute;inset:3.5% 0 3.5% 4%;box-shadow:inset -14px 0 18px -10px rgba(0,0,0,.35)}
+#ab-root .ab-flyleaf{flex:1;position:relative;margin:1.8% 0;box-shadow:inset 16px 0 18px -10px rgba(0,0,0,.3),0 18px 30px -14px rgba(40,30,20,.4);border-radius:0 2px 2px 0}
+#ab-root .es-white{background:#fbfaf7}
+#ab-root .es-black{background:#1d1c1b}
+
+#ab-root .ab-summary{text-align:center;margin-top:10px;color:var(--ab-muted);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.8}
+
+/* ---------- controls ---------- */
+#ab-root .ab-group{padding:16px 0 4px}
+#ab-root .ab-first{padding-top:0}
+#ab-root .ab-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+#ab-root .ab-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ab-muted);margin-bottom:10px}
+#ab-root .ab-label span{color:var(--ab-ink);margin-left:6px}
+#ab-root .ab-sub{margin:12px 0 8px}
+#ab-root .ab-note{font-size:11px;color:var(--ab-muted);margin-top:8px}
+
+/* size tiles */
+#ab-root .ab-sizes{display:flex;flex-wrap:wrap;align-items:flex-start;gap:14px 14px}
+#ab-root .ab-size{background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--ab-muted);display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+#ab-root .ab-size .box{display:flex;align-items:center;justify-content:center;background:var(--ab-tile);border:1px solid var(--ab-line);transition:background .2s,border-color .2s}
+#ab-root .ab-size:hover .box{border-color:var(--ab-muted)}
+#ab-root .ab-size .lbl{font-size:12px;letter-spacing:.04em}
+#ab-root .ab-size.on .box{background:var(--ab-on);border-color:var(--ab-on)}
+#ab-root .ab-size.on .lbl{color:var(--ab-ink);font-weight:500}
+#ab-root .ab-size .box svg{width:22px;height:22px;opacity:0;transition:opacity .2s}
+#ab-root .ab-size.on .box svg{opacity:1}
+
+/* text buttons */
+#ab-root .ab-btns{display:flex;flex-wrap:wrap;gap:6px}
+#ab-root .ab-btn{font:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;padding:0 18px;height:42px;border:1px solid var(--ab-line);background:var(--ab-tile);color:var(--ab-ink);cursor:pointer;display:flex;align-items:center;gap:12px;transition:background .2s,color .2s,border-color .2s}
+#ab-root .ab-btn:hover{border-color:var(--ab-muted)}
+#ab-root .ab-btn.on{background:var(--ab-on);border-color:var(--ab-on);color:#fff}
+#ab-root .ab-covers .ab-btn{padding:0 16px 0 0}
+#ab-root .ab-btn .thumb{width:42px;height:40px;background-color:#c9c6c1;flex:none}
+
+/* swatches \002014 rectangles with the name small underneath */
+#ab-root .ab-swgrid{display:grid;grid-template-columns:repeat(var(--ab-cols,5),1fr);gap:14px 8px;padding:2px}
+@container (max-width:760px){ #ab-root .ab-swgrid{--ab-cols:3} }
+#ab-root .ab-sw{display:flex;flex-direction:column;gap:6px;background:none;border:0;padding:0;cursor:pointer;font:inherit;text-align:left}
+#ab-root .ab-sw .chip{position:relative;display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:2/1;background-size:cover;background-position:center;transition:filter .2s}
+#ab-root .ab-sw:hover .chip{filter:brightness(.94)}
+#ab-root .ab-sw .chip svg{width:26px;height:26px;opacity:0;transition:opacity .2s;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+#ab-root .ab-sw.on .chip svg{opacity:1}
+#ab-root .ab-sw .nm{font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:#b9b5af;line-height:1.2}
+#ab-root .ab-sw.on .nm{color:var(--ab-ink);font-weight:600}
+
+#ab-root .ab-input{width:100%;font:inherit;font-size:13px;padding:10px 12px;border:1px solid var(--ab-line);background:#fff;color:var(--ab-ink);margin:12px 0 0}
+#ab-root .ab-input + .ab-input{margin-top:8px}
+#ab-root .ab-input:focus{outline:none;border-color:var(--ab-muted)}
+#ab-root .ab-textgroup.hide,#ab-root .hide{display:none}
+#ab-root .ab-pick{width:100%;display:flex;align-items:center;gap:14px;padding:8px 14px 8px 8px;background:var(--ab-tile);border:1px solid var(--ab-line);cursor:pointer;font:inherit;color:var(--ab-ink);text-align:left;transition:border-color .2s}
+#ab-root .ab-pick:hover,#ab-root .ab-pick.open{border-color:var(--ab-muted)}
+#ab-root .ab-pick-thumb{width:56px;height:56px;flex:none;background:#fff;border:1px solid var(--ab-line);position:relative}
+#ab-root .ab-pick-thumb.text{width:110px}
+#ab-root .ab-pick-thumb.text i{inset:14% 8%}
+#ab-root .ab-pick-thumb i,#ab-root .ab-dz i{position:absolute;inset:10%;background:#2f2b27;-webkit-mask:var(--design) center/contain no-repeat;mask:var(--design) center/contain no-repeat}
+#ab-root .ab-pick-txt{flex:1;display:flex;flex-direction:column;gap:3px;font-size:13px}
+#ab-root .ab-pick-txt small{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ab-muted)}
+#ab-root .ab-chev{width:20px;height:20px;color:var(--ab-muted);transition:transform .25s}
+#ab-root .ab-pick.open .ab-chev{transform:rotate(180deg)}
+#ab-root{position:relative}
+#ab-root .ab-overlay{position:absolute;inset:0;z-index:50;display:none;background:rgba(243,241,237,.88);padding:0 20px}
+#ab-root .ab-overlay.open{display:block}
+#ab-root .ab-sheet{position:relative;max-width:820px;margin:0 auto;background:#fff;border:1px solid var(--ab-line);box-shadow:0 20px 50px -20px rgba(40,30,20,.35);padding:18px 20px 22px}
+#ab-root .ab-sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ab-muted)}
+
+/* phones: small album preview pinned to the top of the screen while scrolling the options */
+#ab-root .ab-mini{position:fixed;left:0;right:0;top:0;z-index:40;display:flex;align-items:center;gap:14px;padding:10px 16px;
+  background:rgba(243,241,237,.97);border-bottom:1px solid var(--ab-line);box-shadow:0 6px 18px -10px rgba(40,30,20,.35);
+  transform:translateY(-110%);transition:transform .25s ease;pointer-events:none}
+#ab-root .ab-mini.show{transform:none;pointer-events:auto}
+#ab-root .ab-mini-thumb{height:92px;flex:none;display:flex;align-items:center}
+#ab-root .ab-mini-thumb .ab-album{transition:none!important}
+#ab-root .ab-mini-thumb .ab-pages{display:none}
+#ab-root .ab-mini-txt{flex:1;min-width:0;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ab-muted);line-height:1.7}
+#ab-root .ab-mini-up{flex:none;font:inherit;font-size:10px;letter-spacing:.12em;text-transform:uppercase;background:none;border:1px solid var(--ab-line);color:var(--ab-ink);padding:8px 10px;cursor:pointer}
+#ab-root .ab-close{background:none;border:0;font-size:28px;line-height:1;color:var(--ab-ink);cursor:pointer;padding:0 4px}
+#ab-root .ab-tabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--ab-line);margin:-4px 0 16px}
+#ab-root .ab-tab{font:inherit;font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:none;border:0;border-bottom:2px solid transparent;margin-bottom:-1px;padding:10px 14px;color:var(--ab-muted);cursor:pointer}
+#ab-root .ab-tab:hover{color:var(--ab-ink)}
+#ab-root .ab-tab.on{color:var(--ab-ink);border-bottom-color:var(--ab-ink);font-weight:600}
+#ab-root .ab-designs{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 10px;max-height:min(560px,62vh);overflow-y:auto;padding:2px 10px 4px 2px;scrollbar-width:thin;scrollbar-color:var(--ab-muted) transparent}
+#ab-root .ab-designs.text{grid-template-columns:repeat(3,1fr)}
+#ab-root .ab-designs.text .ab-dz span{aspect-ratio:2.4/1}
+#ab-root .ab-designs.text .ab-dz i{inset:12% 8%}
+#ab-root .ab-designs .ab-empty{grid-column:1/-1;padding:30px 10px;text-align:center;color:var(--ab-muted);font-size:12px}
+#ab-root .ab-case.hide{display:none}
+@container (max-width:760px){ #ab-root .ab-designs,#ab-root .ab-designs.text{grid-template-columns:repeat(2,1fr)} #ab-root .ab-overlay{padding:10px} #ab-root .ab-tab{padding:9px 8px;font-size:10px} }
+#ab-root .ab-dz{display:flex;flex-direction:column;gap:6px;background:none;border:0;padding:0;cursor:pointer;font:inherit;text-align:left}
+#ab-root .ab-dz span{position:relative;display:block;aspect-ratio:1/1;background:#fff;border:1px solid var(--ab-line);transition:border-color .2s}
+#ab-root .ab-dz:hover span{border-color:var(--ab-muted)}
+#ab-root .ab-dz.on span{border:1.5px solid var(--ab-ink)}
+#ab-root .ab-dz em{font-style:normal;font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:#a9a59f;line-height:1.25}
+#ab-root .ab-dz.on em{color:var(--ab-ink);font-weight:600}
+#ab-root .ab-upload{display:inline-flex;align-items:center;height:42px;padding:0 18px;border:1px dashed var(--ab-muted);background:var(--ab-tile);cursor:pointer;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+#ab-root .ab-upload input{display:none}
+</style>
+
+<script>
+window.AB_START = function(){
+  /* =====================================================================
+     YOUR OPTIONS \u2014 edit this section.
+
+     SIZES: w and h are inches. The preview draws every size to scale.
+
+     COVERS: each cover type lists its colors, grouped the same way as
+     your swatch sheets (group). The swatch textures themselves are
+     stored at the very bottom of this code \u2014 no need to touch them.
+       - hex: tone used to tint debossed and embossed text.
+       - Luxe Linen uses your Frost product photo as a mockup: Frost shows
+         the photo itself; every other color is the same photo recolored
+         to its hex. Send a photo per cover type to do the same for others.
+       - photo: OPTIONAL. URL of a photo of a finished album in that
+         color (straight on, no text). If set, it replaces the swatch
+         texture on the preview cover. Leave "" to use the swatch.
+       - finishes: which personalization options that cover type offers.
+       - To remove a color, delete its line. To add one, copy a line.
+     ===================================================================== */
+  var CONFIG = {
+    sizes: [
+      { label: '8\u00d78',     w: 8,  h: 8  },
+      { label: '10\u00d710',   w: 10, h: 10 },
+      { label: '12\u00d712',   w: 12, h: 12, design: 3.2 },   // design: optional stamp width in inches for this size
+      { label: '8\u00d710 V',  w: 8,  h: 10 },
+      { label: '9\u00d712 V',  w: 9,  h: 12 }
+    ],
+    paper:     ['Semi-matte', 'Lustre'],
+    endsheets: [ { name: 'White', cls: 'es-white' }, { name: 'Black', cls: 'es-black' } ],
+
+    covers: [
+      { name: 'Luxe Linen',
+        finishes: ['deboss','gold','silver','rose','none'],
+        colors: [
+          { group: 'Luxe Linen I', name: 'Frost',               hex: '#c5c4c6', photo: '' },
+          { group: 'Luxe Linen I', name: 'Rain',                hex: '#576674', photo: '' },
+          { group: 'Luxe Linen I', name: 'Spring',              hex: '#999a8a', photo: '' },
+          { group: 'Luxe Linen I', name: 'Summer',              hex: '#ded5cb', photo: '' },
+          { group: 'Luxe Linen I', name: 'Dusk',                hex: '#626363', photo: '' },
+          { group: 'Luxe Linen I', name: 'Deep Sea',            hex: '#2e3845', photo: '' },
+          { group: 'Luxe Linen I', name: 'Forest',              hex: '#919486', photo: '' },
+          { group: 'Luxe Linen I', name: 'Autumn',              hex: '#ae9c8d', photo: '' },
+          { group: 'Luxe Linen I', name: 'Desert',              hex: '#c4bdb2', photo: '' },
+          { group: 'Luxe Linen I', name: 'Moonstone',           hex: '#9da8ae', photo: '' },
+          { group: 'Luxe Linen I', name: 'Rose Quartz',         hex: '#d6c1be', photo: '' },
+          { group: 'Luxe Linen I', name: 'Onyx',                hex: '#2a2a2a', photo: '' },
+          { group: 'Luxe Linen II', name: 'Blush',               hex: '#cca0a2', photo: '' },
+          { group: 'Luxe Linen II', name: 'Cerulean',            hex: '#63829c', photo: '' },
+          { group: 'Luxe Linen II', name: 'Cherry Blossom',      hex: '#c68a9f', photo: '' },
+          { group: 'Luxe Linen II', name: 'Indigo',              hex: '#1b2936', photo: '' },
+          { group: 'Luxe Linen II', name: 'Ivory',               hex: '#f1e5d7', photo: '' },
+          { group: 'Luxe Linen II', name: 'Laurel',              hex: '#395f53', photo: '' },
+          { group: 'Luxe Linen II', name: 'Lilac',               hex: '#cec3d8', photo: '' },
+          { group: 'Luxe Linen II', name: 'Marigold',            hex: '#7e4036', photo: '' },
+          { group: 'Luxe Linen II', name: 'Mauve',               hex: '#d3b2a4', photo: '' }
+        ]},
+      { name: 'Classic Linen',
+        finishes: ['deboss','gold','silver','rose','none'],
+        colors: [
+          { group: 'Classic Linen', name: 'Wren',                hex: '#ccbfac', photo: '' },
+          { group: 'Classic Linen', name: 'Shoreline',           hex: '#9aadb1', photo: '' },
+          { group: 'Classic Linen', name: 'Dove',                hex: '#bbb8b8', photo: '' },
+          { group: 'Classic Linen', name: 'Cypress',             hex: '#b2b0a9', photo: '' },
+          { group: 'Classic Linen', name: 'River',               hex: '#707988', photo: '' },
+          { group: 'Classic Linen', name: 'Bluff',               hex: '#78767a', photo: '' },
+          { group: 'Classic Linen', name: 'Grove',               hex: '#828b7c', photo: '' },
+          { group: 'Classic Linen', name: 'Harbor',              hex: '#3f4556', photo: '' },
+          { group: 'Classic Linen', name: 'Hudson',              hex: '#4a4b4f', photo: '' }
+        ]},
+      { name: 'Luxe Leather',
+        finishes: ['deboss','gold','silver','rose','none'],
+        colors: [
+          { group: 'Luxe Leather II', name: 'Suede Ivory',         hex: '#cbc2bb', photo: '' },
+          { group: 'Luxe Leather II', name: 'Suede Graphite',      hex: '#828282', photo: '' },
+          { group: 'Luxe Leather II', name: 'Suede Noir',          hex: '#36353a', photo: '' },
+          { group: 'Luxe Leather II', name: 'Suede Driftwood',     hex: '#7a675b', photo: '' },
+          { group: 'Luxe Leather II', name: 'Vintage Brownstone',  hex: '#695649', photo: '' },
+          { group: 'Luxe Leather II', name: 'Vintage Shadow',      hex: '#383b44', photo: '' },
+          { group: 'Luxe Leather II', name: 'Vintage Sandalwood',  hex: '#937964', photo: '' },
+          { group: 'Luxe Leather II', name: 'Vintage Mocha',       hex: '#504640', photo: '' },
+          { group: 'Luxe Leather II', name: 'Vintage Merlot',      hex: '#423535', photo: '' }
+        ]},
+      { name: 'Leather',
+        finishes: ['deboss','gold','silver','rose','none'],
+        colors: [
+          { group: 'Leather I', name: 'Pearl',               hex: '#c3c2be', photo: '' },
+          { group: 'Leather I', name: 'Slate',               hex: '#b3b6ba', photo: '' },
+          { group: 'Leather I', name: 'Mosstone',            hex: '#b4b0a7', photo: '' },
+          { group: 'Leather I', name: 'Saltbox',             hex: '#92a0aa', photo: '' },
+          { group: 'Leather I', name: 'Pagoda',              hex: '#48616a', photo: '' },
+          { group: 'Leather I', name: 'Naval Blue',          hex: '#303743', photo: '' },
+          { group: 'Leather I', name: 'Winter White',        hex: '#dddddb', photo: '' },
+          { group: 'Leather I', name: 'Gunmetal',            hex: '#545351', photo: '' },
+          { group: 'Leather I', name: 'Coal',                hex: '#363439', photo: '' },
+          { group: 'Leather II', name: 'Pinecone',            hex: '#614f49', photo: '' },
+          { group: 'Leather II', name: 'Crema',               hex: '#a98d76', photo: '' },
+          { group: 'Leather II', name: 'Stone',               hex: '#c4b4a2', photo: '' },
+          { group: 'Leather II', name: 'Hazelnut',            hex: '#664f48', photo: '' },
+          { group: 'Leather II', name: 'Sand',                hex: '#a4876e', photo: '' },
+          { group: 'Leather II', name: 'Wheat',               hex: '#d5ba9c', photo: '' },
+          { group: 'Leather II', name: 'Black Bean',          hex: '#4e4444', photo: '' },
+          { group: 'Leather II', name: 'Irish Cream',         hex: '#b18d6e', photo: '' },
+          { group: 'Leather II', name: 'Palomino',            hex: '#b99b74', photo: '' },
+          { group: 'Leather II', name: 'Chocolate',           hex: '#4c3d37', photo: '' },
+          { group: 'Leather II', name: 'Moccasin',            hex: '#715648', photo: '' },
+          { group: 'Leather II', name: 'Nutmeg',              hex: '#73503c', photo: '' }
+        ]},
+      { name: 'Vegan Leather',
+        finishes: ['deboss','gold','silver','rose','none'],
+        colors: [
+          { group: 'Vegan Leather', name: 'Opal',                hex: '#e0d7cf', photo: '' },
+          { group: 'Vegan Leather', name: 'Fawn',                hex: '#bfa694', photo: '' },
+          { group: 'Vegan Leather', name: 'Hickory',             hex: '#705a4e', photo: '' },
+          { group: 'Vegan Leather', name: 'Marble',              hex: '#c9bdb2', photo: '' },
+          { group: 'Vegan Leather', name: 'Pebble',              hex: '#9e9491', photo: '' },
+          { group: 'Vegan Leather', name: 'Shale',               hex: '#595350', photo: '' },
+          { group: 'Vegan Leather', name: 'Twilight',            hex: '#b1b0b6', photo: '' },
+          { group: 'Vegan Leather', name: 'Brook',               hex: '#2e303a', photo: '' },
+          { group: 'Vegan Leather', name: 'Nightfall',           hex: '#2b292d', photo: '' }
+        ]},
+      { name: 'Fabric',
+        finishes: ['deboss','gold','silver','rose','none'],
+        colors: [
+          { group: 'Fabric', name: 'Pure Linen',          hex: '#baac9e', photo: '' },
+          { group: 'Fabric', name: 'Natural Linen',       hex: '#bdac94', photo: '' },
+          { group: 'Fabric', name: 'Almond',              hex: '#d4c6b9', photo: '' },
+          { group: 'Fabric', name: 'Silver Moon',         hex: '#7d7772', photo: '' },
+          { group: 'Fabric', name: 'Champagne',           hex: '#bead9f', photo: '' },
+          { group: 'Fabric', name: 'Taupe',               hex: '#c3a892', photo: '' },
+          { group: 'Fabric', name: 'Turquoise Mist',      hex: '#81aba4', photo: '' },
+          { group: 'Fabric', name: 'Blue Smoke',          hex: '#8f9698', photo: '' },
+          { group: 'Fabric', name: 'Pistachio',           hex: '#959a78', photo: '' },
+          { group: 'Fabric', name: 'Aqua',                hex: '#7d9e98', photo: '' },
+          { group: 'Fabric', name: 'Steel Blue',          hex: '#577780', photo: '' },
+          { group: 'Fabric', name: 'Sugarplum',           hex: '#6a3649', photo: '' }
+        ]},
+      { name: 'Vegan Suede',
+        finishes: ['deboss','gold','silver','rose','none'],
+        colors: [
+          { group: 'Vegan Suede', name: 'Sterling',            hex: '#b6b8c1', photo: '' },
+          { group: 'Vegan Suede', name: 'Heron',               hex: '#706966', photo: '' },
+          { group: 'Vegan Suede', name: 'Sable',               hex: '#242225', photo: '' },
+          { group: 'Vegan Suede', name: 'Merino',              hex: '#e2dace', photo: '' },
+          { group: 'Vegan Suede', name: 'Birch',               hex: '#c4bab0', photo: '' },
+          { group: 'Vegan Suede', name: 'Tupelo',              hex: '#c6a98b', photo: '' },
+          { group: 'Vegan Suede', name: 'Willow',              hex: '#a6a89e', photo: '' },
+          { group: 'Vegan Suede', name: 'Magnolia',            hex: '#c9a493', photo: '' },
+          { group: 'Vegan Suede', name: 'Topaz',               hex: '#c19260', photo: '' },
+          { group: 'Vegan Suede', name: 'Jade',                hex: '#558471', photo: '' },
+          { group: 'Vegan Suede', name: 'Juniper',             hex: '#706549', photo: '' },
+          { group: 'Vegan Suede', name: 'Jasper',              hex: '#6c3832', photo: '' }
+        ]}
+    ],
+
+    finishes: {
+      deboss: { name: 'Blind debossed',    cls: 'fin-deboss' },
+      emboss: { name: 'Embossed',    cls: 'fin-emboss' },
+      gold:   { name: 'Gold foil',   cls: 'fin-gold' },
+      silver: { name: 'Silver foil', cls: 'fin-silver' },
+      rose:   { name: 'Rose gold foil',   cls: 'fin-rose' },
+      white:  { name: 'White text',  cls: 'fin-white' },
+      none:   { name: 'None',        cls: 'fin-none' }
+    },
+    // Design collections, in the order the tabs appear. The first one opens by default.
+    // Artwork is stored at the bottom of this code (AB_STD, AB_COLLECTION, AB_DESIGNS).
+    collections: [
+      { key: 'collection', name: 'Debossing Collection' },
+      { key: 'standard',   name: 'Standard Debossing' },
+      { key: 'custom',     name: 'Custom Debossing' }
+    ],
+    // Standard Debossing lettering is drawn this many inches wide on every album size.
+    textInches: 3.6,
+    // Custom Debossing design names, in order. Rename freely.
+    designNames: [
+      'Arch Vine Monogram',
+      'Shield Monogram',
+      'Oval Monogram',
+      'Climbing Vine Name',
+      'Leaf Sprig Name',
+      'Oval Branch Monogram',
+      'Scalloped Frame Name',
+      'Shield Wreath Monogram',
+      'Laurel Wreath Name',
+      'Leaf Wreath Monogram',
+      'Scalloped Vine Name',
+      'Arch Monogram'
+    ]
+  };
+  /* ===================================================================== */
+
+  var IMG = window.AB_IMG || {};
+  function img(c){ return c ? (IMG[c.group + '/' + c.name] || '') : ''; }
+  var root = document.getElementById('ab-root');
+  var $ = function(id){ return root.querySelector('#'+id); };
+  var state = { size: 0, paper: 0, es: 0, cover: 0, color: 0, finish: 'deboss', coll: 'collection', design: 0, textCase: 'upper', tab: 'collection', pickerOpen: false, view: 'cover', userPhoto: '' };
+  var maxDim = Math.max.apply(null, CONFIG.sizes.map(function(s){ return Math.max(s.w, s.h); }));
+  var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+  function btns(el, items, isOn, onPick, extra){
+    el.innerHTML = '';
+    items.forEach(function(item, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ab-btn' + (isOn(item, i) ? ' on' : '');
+      if (extra) extra(b, item, i);
+      b.appendChild(document.createTextNode(item.name || item));
+      b.onclick = function(){ onPick(item, i); render(); };
+      el.appendChild(b);
+    });
+  }
+
+  function sizeTiles(){
+    var el = $('ab-sizes'); el.innerHTML = '';
+    var px = root.clientWidth < 560 ? 5.6 : 8.2; // pixels per inch for the tiles
+    CONFIG.sizes.forEach(function(s, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ab-size' + (state.size === i ? ' on' : '');
+      b.setAttribute('aria-label', s.label);
+      b.innerHTML = '<span class="box" style="width:'+(s.w*px)+'px;height:'+(s.h*px)+'px">'+CHECK+'</span><span class="lbl">'+s.label+'</span>';
+      b.onclick = function(){ state.size = i; render(); };
+      el.appendChild(b);
+    });
+  }
+
+  function render(){
+    var size  = CONFIG.sizes[state.size];
+    var cover = CONFIG.covers[state.cover];
+    var col   = cover.colors[state.color] || null;
+    if (cover.finishes.indexOf(state.finish) === -1) state.finish = cover.finishes[0];
+    var fin   = CONFIG.finishes[state.finish];
+    function items(key){
+      if (key === 'standard') return (window.AB_STD || []).map(function(d){
+        return { name: d.name, thumb: d.full, stamp: state.textCase === 'lower' ? d.lower : d.upper, text: true }; });
+      if (key === 'collection') return (window.AB_COLLECTION || []).map(function(d, i){
+        return { name: d.name || ('Design ' + (i + 1)), thumb: d.img, stamp: d.img, layout: !!d.layout, wide: (d.ar || 1) > 1.6 }; });
+      return (window.AB_DESIGNS || []).map(function(d, i){
+        return { name: CONFIG.designNames[i] || ('Design ' + (i + 1)), thumb: d.img, stamp: d.img }; });
+    }
+    var COLLS = CONFIG.collections.filter(function(c){ return items(c.key).length; });   // hide empty collections
+    if (!items(state.coll).length && COLLS.length) { state.coll = COLLS[0].key; state.design = 0; }
+    if (!items(state.tab).length) state.tab = state.coll;
+    var cur = items(state.coll), des = cur[state.design] || cur[0];
+    var collName = (CONFIG.collections.filter(function(c){ return c.key === state.coll; })[0] || {}).name || '';
+    var es    = CONFIG.endsheets[state.es];
+
+    /* controls */
+    sizeTiles();
+    btns($('ab-covers'), CONFIG.covers, function(_, i){ return i === state.cover; },
+      function(_, i){ if (state.cover !== i){ state.cover = i; state.color = 0; } state.view = 'cover'; },
+      function(b, c){
+        var t = document.createElement('span');
+        t.className = 'thumb' + (c.isPhotoCover ? ' t-photo' : '');
+        var th = c.colors.length ? img(c.colors[0]) : '';
+        if (th) t.style.backgroundImage = 'url("' + th + '")';
+        b.appendChild(t);
+      });
+    btns($('ab-finishes'), cover.finishes.map(function(k){ return CONFIG.finishes[k]; }),
+      function(f){ return f === fin; },
+      function(f){ for (var k in CONFIG.finishes) if (CONFIG.finishes[k] === f) state.finish = k; state.view = 'cover'; });
+    var tabs = $('ab-tabs'); tabs.innerHTML = '';
+    COLLS.forEach(function(c){
+      var t = document.createElement('button'); t.type = 'button';
+      t.className = 'ab-tab' + (c.key === state.tab ? ' on' : '');
+      t.textContent = c.name;
+      t.onclick = function(){ state.tab = c.key; render(); };
+      tabs.appendChild(t);
+    });
+    tabs.style.display = COLLS.length > 1 ? '' : 'none';
+    var dz = $('ab-designs'); var keepScroll = root._lastTab === state.tab ? dz.scrollTop : 0; root._lastTab = state.tab; dz.innerHTML = '';
+    var list = items(state.tab);
+    dz.classList.toggle('text', state.tab === 'standard');
+    list.forEach(function(d, i){
+      var b = document.createElement('button'); b.type = 'button';
+      b.className = 'ab-dz' + (state.tab === state.coll && i === state.design ? ' on' : '');
+      b.innerHTML = '<span><i style="--design:url(' + d.thumb + ')"></i></span><em></em>';
+      b.querySelector('em').textContent = d.name;
+      b.onclick = function(){ state.coll = state.tab; state.design = i; state.pickerOpen = false; state.view = 'cover'; render(); };
+      dz.appendChild(b);
+    });
+    dz.scrollTop = keepScroll;
+    var ov = $('ab-overlay'), wasOpen = ov.classList.contains('open');
+    ov.classList.toggle('open', state.pickerOpen);
+    if (state.pickerOpen && !wasOpen) placeSheet();
+    $('ab-pick').classList.toggle('open', state.pickerOpen);
+    $('ab-pick-thumb').innerHTML = des ? '<i style="--design:url(' + des.thumb + ')"></i>' : '';
+    $('ab-pick-thumb').classList.toggle('text', !!(des && des.text));
+    $('ab-pick-name').textContent = des ? (des.text ? collName + ' \u2014 ' + des.name : des.name) : '';
+    btns($('ab-case'), [{ name: 'Uppercase', k: 'upper' }, { name: 'Lowercase', k: 'lower' }],
+      function(o){ return o.k === state.textCase; }, function(o){ state.textCase = o.k; state.view = 'cover'; });
+    $('ab-casegroup').classList.toggle('hide', !(des && des.text));
+
+    var sw = $('ab-colors'); sw.innerHTML = '';
+    var grid = document.createElement('div'); grid.className = 'ab-swgrid'; sw.appendChild(grid);
+    cover.colors.forEach(function(c, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ab-sw' + (state.color === i ? ' on' : '');
+      b.setAttribute('aria-label', c.name);
+      var chip = document.createElement('span'); chip.className = 'chip';
+      chip.style.backgroundColor = c.hex;
+      var im = img(c); if (im) chip.style.backgroundImage = 'url("' + im + '")';
+      chip.innerHTML = CHECK;
+      var nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = c.name;
+      b.appendChild(chip); b.appendChild(nm);
+      b.onclick = function(){ state.color = i; state.view = 'cover'; render(); };
+      grid.appendChild(b);
+    });
+    $('ab-colorname').textContent = cover.name + ' cover material';
+    $('ab-colorgroup').classList.toggle('hide', !!cover.isPhotoCover);
+    $('ab-textgroup').classList.toggle('hide', fin.cls === 'fin-none');
+
+    /* closed album, drawn to scale */
+    var album = $('ab-album');
+    // album fills the left side (stage is 4:5); bigger sizes are drawn a little larger
+    var r = size.w / size.h, fit = Math.min(0.82, 1.25 * r * 0.82);
+    var cue = 0.86 + 0.14 * (Math.max(size.w, size.h) / maxDim);
+    album.style.setProperty('--aw', (fit * cue * 100) + '%');
+    album.style.setProperty('--ar', size.w + '/' + size.h);
+
+    var coverEl = $('ab-cover');
+    var key = col ? col.group + '/' + col.name : '';
+    // 1) a real product photo of this exact color  2) the cover type's mockup photo, recolored  3) the swatch texture, tiled
+    var vert = size.h > size.w;
+    var sqOnVert = false;
+    function shot(o){
+      if (!o) return '';
+      if (typeof o === 'string') return o;
+      if (vert && o.v) return o.v;
+      if (vert) sqOnVert = true;   // only a square photo: keep the spine, trim the right side
+      return o.sq;
+    }
+    var MK = window.AB_MOCK || {};
+    var real = !cover.isPhotoCover && col && (col.photo || shot((window.AB_PHOTO || {})[key]));
+    // a mockup for a family of colors (e.g. "Luxe Leather:Vintage") wins over the cover-wide one
+    var fam = col ? cover.name + ':' + col.name.split(' ')[0] : '';
+    var mock = !cover.isPhotoCover && !real && shot(MK[fam] || MK[cover.name]);
+    var photo = cover.isPhotoCover ? state.userPhoto : (real || mock || (col && img(col)));
+    var hex = col ? col.hex : '#cfccc7';
+    var mode = cover.isPhotoCover ? 'user' : real ? 'real' : mock ? 'mock' : 'tile';
+    $('ab-album').classList.toggle('mockup', mode === 'real' || mode === 'mock');
+    coverEl.className = 'ab-cover' + (cover.isPhotoCover ? ' photo-cover' : '') + (photo ? ' has-photo' : '') + (mode === 'real' || mode === 'mock' ? ' mockup' : '');
+    coverEl.querySelector('.ab-tex').className = 'ab-tex';
+    coverEl.style.setProperty('--cover', hex);
+    coverEl.style.backgroundImage = photo ? 'url("' + photo + '")' : 'none';
+    root.style.setProperty('--bgs', mode === 'tile' ? '230px 230px' : (mode === 'user' ? 'cover' : (sqOnVert ? 'auto 100%' : '100% 100%')));
+    root.style.setProperty('--bgp', mode === 'tile' ? '0 0' : (sqOnVert ? 'left center' : 'center'));
+    root.style.setProperty('--blend', mode === 'mock' ? 'overlay' : 'normal');
+    root.style.setProperty('--blend-ink', mode === 'mock' ? 'normal, overlay' : 'normal');
+
+    if (!root._foil && window.AB_FOIL){
+      root._foil = 1;
+      ['gold','silver','rose'].forEach(function(k){ root.style.setProperty('--foil-' + k, 'url(' + window.AB_FOIL[k] + ')'); });
+    }
+    var mark = $('ab-mark'), ink = $('ab-ink');
+    mark.className = 'ab-mark ' + fin.cls;
+    ink.style.setProperty('--design', des ? 'url(' + des.stamp + ')' : 'none');
+    ink.style.setProperty('--coverimg', photo ? 'url("' + photo + '")' : 'none');
+    // design area: centered on the cover face, just right of the spine
+    // the stamp is a fixed physical size (DESIGN_INCHES across), so it looks smaller on bigger albums
+    var DESIGN_INCHES = 2.9, cx = 0.52;
+    // full-cover layouts (names in one corner, date in another) fill most of the cover face
+    // wide one-line designs (names across) are set at the lettering width, emblems at DESIGN_INCHES
+    var box = des && des.layout ? 0.74 : des && (des.text || des.wide) ? Math.min(0.62, CONFIG.textInches / size.w) : Math.min(0.6, (size.design || DESIGN_INCHES) / size.w);
+    ink.style.setProperty('--pad-l', (cx - box / 2) * 100 + '%');
+    ink.style.setProperty('--pad-r', (1 - cx - box / 2) * 100 + '%');
+    ink.style.setProperty('--pad-t', Math.max(0, (1 / r - box) / 2 * 100) + '%');
+
+    /* open album: inside of cover board + endsheet + facing flyleaf */
+    var open = $('ab-open'), board = $('ab-board');
+    open.style.setProperty('--oar', (size.w * 2) + '/' + size.h);
+    open.style.setProperty('--ow', Math.min(90, 1.25 * (2 * r) * 82) * cue + '%');
+    board.style.setProperty('--cover', hex);
+    board.style.backgroundColor = hex;
+    var bimg = cover.isPhotoCover ? '' : (col && img(col));
+    board.style.backgroundImage = bimg ? 'url("' + bimg + '")' : 'none';
+    board.querySelector('.ab-tex').className = 'ab-tex';
+    $('ab-esl').className = 'ab-endsheet ' + es.cls;
+    $('ab-esr').className = 'ab-flyleaf ' + es.cls;
+
+    root.querySelector('.ab-stage').classList.toggle('view-open', state.view === 'open');
+
+    $('ab-summary').innerHTML =
+      size.label + ' &nbsp;\u00b7&nbsp; ' + cover.name + (col ? ' in ' + col.name : '') +
+      '<br>' + (fin.cls === 'fin-none' ? 'No personalization' : fin.name + ' \u00b7 ' + (des ? (des.text ? des.name + ' (' + state.textCase + 'case)' : des.name) : ''));
+    if (root._syncMini) root._syncMini();
+  }
+
+
+  // open the design window as a centered pop-up, near the top of the visible part of the screen
+  function placeSheet(){
+    var sheet = $('ab-sheet'), grid = $('ab-designs');
+    sheet.style.cssText = ''; grid.style.maxHeight = '';
+    var rr = root.getBoundingClientRect(), vh = window.innerHeight || rr.height;
+    var gap = 24;
+    var visTop = Math.max(0, -rr.top);                        // how far the tool is scrolled past the top of the window
+    var visH = Math.min(vh, rr.bottom) - Math.max(0, rr.top); // height of the tool that is on screen
+    var chrome = sheet.offsetHeight - grid.offsetHeight;
+    grid.style.maxHeight = Math.max(240, Math.min(620, visH - gap * 2 - chrome)) + 'px';
+    var top = visTop + gap;
+    top = Math.max(0, Math.min(top, root.offsetHeight - sheet.offsetHeight - gap));
+    sheet.style.marginTop = top + 'px';
+  }
+  // ---- pinned mini preview (phones only)
+  function syncMini(){
+    var mini = $('ab-mini'), thumb = $('ab-mini-thumb'), album = $('ab-album');
+    var size = CONFIG.sizes[state.size], r = size.w / size.h, H = 92;
+    var c = album.cloneNode(true);
+    [c].concat([].slice.call(c.querySelectorAll('[id]'))).forEach(function(e){ e.removeAttribute('id'); });
+    c.style.width = Math.round(H * Math.min(1, r)) + 'px';
+    thumb.innerHTML = ''; thumb.appendChild(c);
+    $('ab-mini-txt').innerHTML = $('ab-summary').innerHTML;
+    checkMini();
+  }
+  function checkMini(){
+    var mini = $('ab-mini');
+    var narrow = root.clientWidth < 760;
+    var a = $('ab-album').getBoundingClientRect(), rr = root.getBoundingClientRect();
+    var show = narrow && !state.pickerOpen && a.bottom < 40 && rr.bottom > 260;
+    mini.classList.toggle('show', show);
+  }
+  root._syncMini = syncMini;
+  window.addEventListener('scroll', checkMini, { passive: true });
+  window.addEventListener('resize', checkMini);
+  $('ab-mini-up').addEventListener('click', function(){
+    var y = $('ab-album').getBoundingClientRect().top + (window.pageYOffset || 0) - 20;
+    try { window.scrollTo({ top: y, behavior: 'smooth' }); } catch(e){ window.scrollTo(0, y); }
+  });
+  $('ab-pick').addEventListener('click', function(){ state.pickerOpen = !state.pickerOpen; if (state.pickerOpen) state.tab = state.coll; render(); });
+  $('ab-close').addEventListener('click', function(){ state.pickerOpen = false; render(); });
+  $('ab-overlay').addEventListener('click', function(e){ if (e.target === this){ state.pickerOpen = false; render(); } });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && state.pickerOpen){ state.pickerOpen = false; render(); } });
+
+  render();
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ root.classList.add('ab-ready'); }); });
+};
+if (window.AB_IMG) window.AB_START();
+</script>
+<!-- Swatch textures (generated from your swatch sheets) &#8212; leave as is -->
+<script>
+window.AB_IMG = {"Classic Linen/Wren":"@/swatch-classic-linen-wren.webp","Classic Linen/Shoreline":"@/swatch-classic-linen-shoreline.webp","Classic Linen/Dove":"@/swatch-classic-linen-dove.webp","Classic Linen/Cypress":"@/swatch-classic-linen-cypress.webp","Classic Linen/River":"@/swatch-classic-linen-river.webp","Classic Linen/Bluff":"@/swatch-classic-linen-bluff.webp","Classic Linen/Grove":"@/swatch-classic-linen-grove.webp","Classic Linen/Harbor":"@/swatch-classic-linen-harbor.webp","Classic Linen/Hudson":"@/swatch-classic-linen-hudson.webp","Luxe Leather II/Suede Ivory":"@/swatch-luxe-leather-ii-suede-ivory.webp","Luxe Leather II/Suede Graphite":"@/swatch-luxe-leather-ii-suede-graphite.webp","Luxe Leather II/Suede Noir":"@/swatch-luxe-leather-ii-suede-noir.webp","Luxe Leather II/Suede Driftwood":"@/swatch-luxe-leather-ii-suede-driftwood.webp","Luxe Leather II/Vintage Brownstone":"@/swatch-luxe-leather-ii-vintage-brownstone.webp","Luxe Leather II/Vintage Shadow":"@/swatch-luxe-leather-ii-vintage-shadow.webp","Luxe Leather II/Vintage Sandalwood":"@/swatch-luxe-leather-ii-vintage-sandalwood.webp","Luxe Leather II/Vintage Mocha":"@/swatch-luxe-leather-ii-vintage-mocha.webp","Luxe Leather II/Vintage Merlot":"@/swatch-luxe-leather-ii-vintage-merlot.webp","Fabric/Pure Linen":"@/swatch-fabric-pure-linen.webp","Fabric/Natural Linen":"@/swatch-fabric-natural-linen.webp","Fabric/Almond":"@/swatch-fabric-almond.webp","Fabric/Silver Moon":"@/swatch-fabric-silver-moon.webp","Fabric/Champagne":"@/swatch-fabric-champagne.webp","Fabric/Taupe":"@/swatch-fabric-taupe.webp","Fabric/Turquoise Mist":"@/swatch-fabric-turquoise-mist.webp","Fabric/Blue Smoke":"@/swatch-fabric-blue-smoke.webp","Fabric/Pistachio":"@/swatch-fabric-pistachio.webp","Fabric/Aqua":"@/swatch-fabric-aqua.webp","Fabric/Steel Blue":"@/swatch-fabric-steel-blue.webp","Fabric/Sugarplum":"@/swatch-fabric-sugarplum.webp","Vegan Suede/Sterling":"@/swatch-vegan-suede-sterling.webp","Vegan Suede/Heron":"@/swatch-vegan-suede-heron.webp","Vegan Suede/Sable":"@/swatch-vegan-suede-sable.webp","Vegan Suede/Merino":"@/swatch-vegan-suede-merino.webp","Vegan Suede/Birch":"@/swatch-vegan-suede-birch.webp","Vegan Suede/Tupelo":"@/swatch-vegan-suede-tupelo.webp","Vegan Suede/Willow":"@/swatch-vegan-suede-willow.webp","Vegan Suede/Magnolia":"@/swatch-vegan-suede-magnolia.webp","Vegan Suede/Topaz":"@/swatch-vegan-suede-topaz.webp","Vegan Suede/Jade":"@/swatch-vegan-suede-jade.webp","Vegan Suede/Juniper":"@/swatch-vegan-suede-juniper.webp","Vegan Suede/Jasper":"@/swatch-vegan-suede-jasper.webp","Leather I/Pearl":"@/swatch-leather-i-pearl.webp","Leather I/Slate":"@/swatch-leather-i-slate.webp","Leather I/Mosstone":"@/swatch-leather-i-mosstone.webp","Leather I/Saltbox":"@/swatch-leather-i-saltbox.webp","Leather I/Pagoda":"@/swatch-leather-i-pagoda.webp","Leather I/Naval Blue":"@/swatch-leather-i-naval-blue.webp","Leather I/Winter White":"@/swatch-leather-i-winter-white.webp","Leather I/Gunmetal":"@/swatch-leather-i-gunmetal.webp","Leather I/Coal":"@/swatch-leather-i-coal.webp","Vegan Leather/Opal":"@/swatch-vegan-leather-opal.webp","Vegan Leather/Fawn":"@/swatch-vegan-leather-fawn.webp","Vegan Leather/Hickory":"@/swatch-vegan-leather-hickory.webp","Vegan Leather/Marble":"@/swatch-vegan-leather-marble.webp","Vegan Leather/Pebble":"@/swatch-vegan-leather-pebble.webp","Vegan Leather/Shale":"@/swatch-vegan-leather-shale.webp","Vegan Leather/Twilight":"@/swatch-vegan-leather-twilight.webp","Vegan Leather/Brook":"@/swatch-vegan-leather-brook.webp","Vegan Leather/Nightfall":"@/swatch-vegan-leather-nightfall.webp","Leather II/Pinecone":"@/swatch-leather-ii-pinecone.webp","Leather II/Crema":"@/swatch-leather-ii-crema.webp","Leather II/Stone":"@/swatch-leather-ii-stone.webp","Leather II/Hazelnut":"@/swatch-leather-ii-hazelnut.webp","Leather II/Sand":"@/swatch-leather-ii-sand.webp","Leather II/Wheat":"@/swatch-leather-ii-wheat.webp","Leather II/Black Bean":"@/swatch-leather-ii-black-bean.webp","Leather II/Irish Cream":"@/swatch-leather-ii-irish-cream.webp","Leather II/Palomino":"@/swatch-leather-ii-palomino.webp","Leather II/Chocolate":"@/swatch-leather-ii-chocolate.webp","Leather II/Moccasin":"@/swatch-leather-ii-moccasin.webp","Leather II/Nutmeg":"@/swatch-leather-ii-nutmeg.webp","Luxe Linen I/Frost":"@/swatch-luxe-linen-i-frost.webp","Luxe Linen I/Dusk":"@/swatch-luxe-linen-i-dusk.webp","Luxe Linen I/Onyx":"@/swatch-luxe-linen-i-onyx.webp","Luxe Linen I/Moonstone":"@/swatch-luxe-linen-i-moonstone.webp","Luxe Linen I/Rain":"@/swatch-luxe-linen-i-rain.webp","Luxe Linen I/Deep Sea":"@/swatch-luxe-linen-i-deep-sea.webp","Luxe Linen I/Rose Quartz":"@/swatch-luxe-linen-i-rose-quartz.webp","Luxe Linen I/Desert":"@/swatch-luxe-linen-i-desert.webp","Luxe Linen I/Forest":"@/swatch-luxe-linen-i-forest.webp","Luxe Linen I/Spring":"@/swatch-luxe-linen-i-spring.webp","Luxe Linen I/Summer":"@/swatch-luxe-linen-i-summer.webp","Luxe Linen I/Autumn":"@/swatch-luxe-linen-i-autumn.webp","Luxe Linen II/Ivory":"@/swatch-luxe-linen-ii-ivory.webp","Luxe Linen II/Mauve":"@/swatch-luxe-linen-ii-mauve.webp","Luxe Linen II/Blush":"@/swatch-luxe-linen-ii-blush.webp","Luxe Linen II/Cerulean":"@/swatch-luxe-linen-ii-cerulean.webp","Luxe Linen II/Lilac":"@/swatch-luxe-linen-ii-lilac.webp","Luxe Linen II/Cherry Blossom":"@/swatch-luxe-linen-ii-cherry-blossom.webp","Luxe Linen II/Indigo":"@/swatch-luxe-linen-ii-indigo.webp","Luxe Linen II/Laurel":"@/swatch-luxe-linen-ii-laurel.webp","Luxe Linen II/Marigold":"@/swatch-luxe-linen-ii-marigold.webp"};
+window.AB_PHOTO = {"Luxe Linen I/Forest":{"sq":"@/cover-luxe-linen-i-forest-sq.webp"},"Luxe Linen I/Spring":{"sq":"@/cover-luxe-linen-i-spring-sq.webp"},"Luxe Linen I/Rose Quartz":{"sq":"@/cover-luxe-linen-i-rose-quartz-sq.webp"},"Luxe Linen II/Marigold":{"sq":"@/cover-luxe-linen-ii-marigold-sq.webp"},"Luxe Linen II/Mauve":{"sq":"@/cover-luxe-linen-ii-mauve-sq.webp"},"Luxe Linen II/Lilac":{"sq":"@/cover-luxe-linen-ii-lilac-sq.webp"},"Luxe Linen II/Laurel":{"sq":"@/cover-luxe-linen-ii-laurel-sq.webp"},"Luxe Linen I/Deep Sea":{"sq":"@/cover-luxe-linen-i-deep-sea-sq.webp"},"Luxe Linen II/Cherry Blossom":{"sq":"@/cover-luxe-linen-ii-cherry-blossom-sq.webp"},"Luxe Linen II/Cerulean":{"sq":"@/cover-luxe-linen-ii-cerulean-sq.webp"},"Luxe Linen II/Blush":{"sq":"@/cover-luxe-linen-ii-blush-sq.webp"},"Luxe Linen II/Ivory":{"sq":"@/cover-luxe-linen-ii-ivory-sq.webp"},"Vegan Leather/Twilight":{"sq":"@/cover-vegan-leather-twilight-sq.webp"},"Vegan Leather/Shale":{"sq":"@/cover-vegan-leather-shale-sq.webp"},"Vegan Leather/Pebble":{"sq":"@/cover-vegan-leather-pebble-sq.webp"},"Vegan Leather/Nightfall":{"sq":"@/cover-vegan-leather-nightfall-sq.webp"},"Vegan Leather/Marble":{"sq":"@/cover-vegan-leather-marble-sq.webp"},"Vegan Leather/Hickory":{"sq":"@/cover-vegan-leather-hickory-sq.webp"},"Vegan Leather/Opal":{"sq":"@/cover-vegan-leather-opal-sq.webp"},"Vegan Leather/Fawn":{"sq":"@/cover-vegan-leather-fawn-sq.webp"},"Vegan Leather/Brook":{"sq":"@/cover-vegan-leather-brook-sq.webp"},"Vegan Suede/Willow":{"sq":"@/cover-vegan-suede-willow-sq.webp"},"Vegan Suede/Tupelo":{"sq":"@/cover-vegan-suede-tupelo-sq.webp"},"Vegan Suede/Topaz":{"sq":"@/cover-vegan-suede-topaz-sq.webp"},"Vegan Suede/Sable":{"sq":"@/cover-vegan-suede-sable-sq.webp"},"Vegan Suede/Merino":{"sq":"@/cover-vegan-suede-merino-sq.webp"},"Vegan Suede/Magnolia":{"sq":"@/cover-vegan-suede-magnolia-sq.webp"},"Vegan Suede/Juniper":{"sq":"@/cover-vegan-suede-juniper-sq.webp"},"Vegan Suede/Jasper":{"sq":"@/cover-vegan-suede-jasper-sq.webp"},"Vegan Suede/Jade":{"sq":"@/cover-vegan-suede-jade-sq.webp"},"Vegan Suede/Sterling":{"sq":"@/cover-vegan-suede-sterling-sq.webp"},"Vegan Suede/Heron":{"sq":"@/cover-vegan-suede-heron-sq.webp"},"Vegan Suede/Birch":{"sq":"@/cover-vegan-suede-birch-sq.webp"},"Fabric/Turquoise Mist":{"sq":"@/cover-fabric-turquoise-mist-sq.webp"},"Fabric/Taupe":{"sq":"@/cover-fabric-taupe-sq.webp"},"Fabric/Sugarplum":{"sq":"@/cover-fabric-sugarplum-sq.webp"},"Fabric/Steel Blue":{"sq":"@/cover-fabric-steel-blue-sq.webp"},"Fabric/Silver Moon":{"sq":"@/cover-fabric-silver-moon-sq.webp"},"Fabric/Pure Linen":{"sq":"@/cover-fabric-pure-linen-sq.webp"},"Fabric/Pistachio":{"sq":"@/cover-fabric-pistachio-sq.webp"},"Fabric/Natural Linen":{"sq":"@/cover-fabric-natural-linen-sq.webp"},"Fabric/Champagne":{"sq":"@/cover-fabric-champagne-sq.webp"},"Fabric/Blue Smoke":{"sq":"@/cover-fabric-blue-smoke-sq.webp"},"Fabric/Aqua":{"sq":"@/cover-fabric-aqua-sq.webp"},"Fabric/Almond":{"sq":"@/cover-fabric-almond-sq.webp"},"Leather I/Pearl":{"sq":"@/cover-leather-i-pearl-sq.webp"},"Leather I/Winter White":{"sq":"@/cover-leather-i-winter-white-sq.webp"},"Leather II/Wheat":{"sq":"@/cover-leather-ii-wheat-sq.webp"},"Leather II/Stone":{"sq":"@/cover-leather-ii-stone-sq.webp"},"Leather I/Slate":{"sq":"@/cover-leather-i-slate-sq.webp"},"Leather II/Crema":{"sq":"@/cover-leather-ii-crema-sq.webp"},"Leather I/Saltbox":{"sq":"@/cover-leather-i-saltbox-sq.webp"},"Leather II/Pinecone":{"sq":"@/cover-leather-ii-pinecone-sq.webp"},"Leather II/Palomino":{"sq":"@/cover-leather-ii-palomino-sq.webp"},"Leather I/Pagoda":{"sq":"@/cover-leather-i-pagoda-sq.webp"},"Leather II/Nutmeg":{"sq":"@/cover-leather-ii-nutmeg-sq.webp"},"Leather I/Naval Blue":{"sq":"@/cover-leather-i-naval-blue-sq.webp"},"Leather I/Mosstone":{"sq":"@/cover-leather-i-mosstone-sq.webp"},"Leather II/Moccasin":{"sq":"@/cover-leather-ii-moccasin-sq.webp"},"Leather II/Irish Cream":{"sq":"@/cover-leather-ii-irish-cream-sq.webp"},"Leather II/Hazelnut":{"sq":"@/cover-leather-ii-hazelnut-sq.webp"},"Leather I/Gunmetal":{"sq":"@/cover-leather-i-gunmetal-sq.webp"},"Leather II/Sand":{"sq":"@/cover-leather-ii-sand-sq.webp"},"Leather I/Coal":{"sq":"@/cover-leather-i-coal-sq.webp"},"Leather II/Chocolate":{"sq":"@/cover-leather-ii-chocolate-sq.webp"},"Leather II/Black Bean":{"sq":"@/cover-leather-ii-black-bean-sq.webp"},"Classic Linen/Wren":{"sq":"@/cover-classic-linen-wren-sq.webp"},"Classic Linen/Shoreline":{"sq":"@/cover-classic-linen-shoreline-sq.webp"},"Classic Linen/Cypress":{"sq":"@/cover-classic-linen-cypress-sq.webp"},"Classic Linen/River":{"sq":"@/cover-classic-linen-river-sq.webp"},"Classic Linen/Hudson":{"sq":"@/cover-classic-linen-hudson-sq.webp"},"Classic Linen/Grove":{"sq":"@/cover-classic-linen-grove-sq.webp"},"Classic Linen/Harbor":{"sq":"@/cover-classic-linen-harbor-sq.webp"},"Classic Linen/Dove":{"sq":"@/cover-classic-linen-dove-sq.webp"},"Classic Linen/Bluff":{"sq":"@/cover-classic-linen-bluff-sq.webp"},"Luxe Leather II/Vintage Merlot":{"sq":"@/cover-luxe-leather-ii-vintage-merlot-sq.webp"},"Luxe Leather II/Vintage Mocha":{"sq":"@/cover-luxe-leather-ii-vintage-mocha-sq.webp"},"Luxe Leather II/Vintage Sandalwood":{"sq":"@/cover-luxe-leather-ii-vintage-sandalwood-sq.webp"},"Luxe Leather II/Vintage Brownstone":{"sq":"@/cover-luxe-leather-ii-vintage-brownstone-sq.webp"},"Luxe Leather II/Suede Driftwood":{"sq":"@/cover-luxe-leather-ii-suede-driftwood-sq.webp"},"Luxe Leather II/Suede Ivory":{"sq":"@/cover-luxe-leather-ii-suede-ivory-sq.webp","v":"@/cover-luxe-leather-ii-suede-ivory-v.webp"},"Luxe Linen I/Frost":{"sq":"@/cover-luxe-linen-i-frost-sq.webp","v":"@/cover-luxe-linen-i-frost-v.webp"}};
+window.AB_MOCK = {"Luxe Leather:Vintage":{"sq":"@/mockup-luxe-leather-vintage-sq.webp"},"Luxe Leather":{"sq":"@/mockup-luxe-leather-sq.webp","v":"@/mockup-luxe-leather-v.webp"},"Luxe Linen":{"sq":"@/mockup-luxe-linen-sq.webp","v":"@/mockup-luxe-linen-v.webp"}};
+window.AB_FOIL = {"gold":"@/foil-gold.webp","rose":"@/foil-rose.webp","silver":"@/foil-silver.webp"};
+window.AB_STD = [{"name":"Alto","full":"@/standard-alto-full.webp","upper":"@/standard-alto-upper.webp","lower":"@/standard-alto-lower.webp"},{"name":"Asa","full":"@/standard-asa-full.webp","upper":"@/standard-asa-upper.webp","lower":"@/standard-asa-lower.webp"},{"name":"Ballard","full":"@/standard-ballard-full.webp","upper":"@/standard-ballard-upper.webp","lower":"@/standard-ballard-lower.webp"},{"name":"Brighton","full":"@/standard-brighton-full.webp","upper":"@/standard-brighton-upper.webp","lower":"@/standard-brighton-lower.webp"},{"name":"Chloe","full":"@/standard-chloe-full.webp","upper":"@/standard-chloe-upper.webp","lower":"@/standard-chloe-lower.webp"},{"name":"Cologne","full":"@/standard-cologne-full.webp","upper":"@/standard-cologne-upper.webp","lower":"@/standard-cologne-lower.webp"},{"name":"Devon","full":"@/standard-devon-full.webp","upper":"@/standard-devon-upper.webp","lower":"@/standard-devon-lower.webp"},{"name":"Edinburg","full":"@/standard-edinburg-full.webp","upper":"@/standard-edinburg-upper.webp","lower":"@/standard-edinburg-lower.webp"},{"name":"Elle","full":"@/standard-elle-full.webp","upper":"@/standard-elle-upper.webp","lower":"@/standard-elle-lower.webp"},{"name":"Geo","full":"@/standard-geo-full.webp","upper":"@/standard-geo-upper.webp","lower":"@/standard-geo-lower.webp"},{"name":"Gloucester","full":"@/standard-gloucester-full.webp","upper":"@/standard-gloucester-upper.webp","lower":"@/standard-gloucester-lower.webp"},{"name":"Rosa","full":"@/standard-rosa-full.webp","upper":"@/standard-rosa-upper.webp","lower":"@/standard-rosa-lower.webp"},{"name":"Rutland","full":"@/standard-rutland-full.webp","upper":"@/standard-rutland-upper.webp","lower":"@/standard-rutland-lower.webp"},{"name":"Tula","full":"@/standard-tula-full.webp","upper":"@/standard-tula-upper.webp","lower":"@/standard-tula-lower.webp"}];
+window.AB_COLLECTION = [{"name":"Design 01","img":"@/collection-design-01-img.webp","ar":0.91},{"name":"Design 02","img":"@/collection-design-02-img.webp","ar":1.92},{"name":"Design 03","img":"@/collection-design-03-img.webp","ar":1.84},{"name":"Design 04","img":"@/collection-design-04-img.webp","ar":0.73},{"name":"Design 05","img":"@/collection-design-05-img.webp","ar":5.14},{"name":"Design 06","img":"@/collection-design-06-img.webp","ar":2.53},{"name":"Design 07","img":"@/collection-design-07-img.webp","ar":2.33},{"name":"Design 08","img":"@/collection-design-08-img.webp","ar":1.38},{"name":"Design 09","img":"@/collection-design-09-img.webp","ar":1.68},{"name":"Design 10","img":"@/collection-design-10-img.webp","ar":0.89},{"name":"Design 11","layout":false,"img":"@/collection-design-11-img.webp","ar":0.51},{"name":"Design 12","layout":false,"img":"@/collection-design-12-img.webp","ar":1.51},{"name":"Design 13","layout":false,"img":"@/collection-design-13-img.webp","ar":1.6},{"name":"Design 14","layout":false,"img":"@/collection-design-14-img.webp","ar":0.74},{"name":"Design 15","layout":false,"img":"@/collection-design-15-img.webp","ar":1.27},{"name":"Design 16","layout":false,"img":"@/collection-design-16-img.webp","ar":2.8},{"name":"Design 17","layout":true,"img":"@/collection-design-17-img.webp","ar":1},{"name":"Design 18","layout":false,"img":"@/collection-design-18-img.webp","ar":1.4},{"name":"Design 19","layout":false,"img":"@/collection-design-19-img.webp","ar":1.63},{"name":"Design 20","layout":true,"img":"@/collection-design-20-img.webp","ar":1},{"name":"Design 21","layout":false,"img":"@/collection-design-21-img.webp","ar":0.8},{"name":"Design 22","layout":false,"img":"@/collection-design-22-img.webp","ar":2.06},{"name":"Design 23","layout":false,"img":"@/collection-design-23-img.webp","ar":1.98},{"name":"Design 24","layout":false,"img":"@/collection-design-24-img.webp","ar":3},{"name":"Design 25","layout":true,"img":"@/collection-design-25-img.webp","ar":1},{"name":"Design 26","layout":false,"img":"@/collection-design-26-img.webp","ar":0.43},{"name":"Design 27","layout":false,"img":"@/collection-design-27-img.webp","ar":5.26},{"name":"Design 28","layout":true,"img":"@/collection-design-28-img.webp","ar":1},{"name":"Design 29","layout":false,"img":"@/collection-design-29-img.webp","ar":2.96},{"name":"Design 30","layout":false,"img":"@/collection-design-30-img.webp","ar":3.45},{"name":"Design 31","layout":false,"img":"@/collection-design-31-img.webp","ar":5.11},{"name":"Design 32","layout":false,"img":"@/collection-design-32-img.webp","ar":1.37}];
+window.AB_DESIGNS = [{"img":"@/custom-1-img.webp"},{"img":"@/custom-2-img.webp"},{"img":"@/custom-3-img.webp"},{"img":"@/custom-4-img.webp"},{"img":"@/custom-5-img.webp"},{"img":"@/custom-6-img.webp"},{"img":"@/custom-7-img.webp"},{"img":"@/custom-8-img.webp"},{"img":"@/custom-9-img.webp"},{"img":"@/custom-10-img.webp"},{"img":"@/custom-11-img.webp"},{"img":"@/custom-12-img.webp"}];
+
+/* ===== IMAGE LOCATION \u2014 paste the address of the folder where you uploaded the album-images files ===== */
+window.AB_IMAGE_BASE = 'album-images/';
+/* ====================================================================================================== */
+(function(){
+  var B = window.AB_IMAGE_BASE.replace(/\/?$/, '/');
+  function fix(o){ if (typeof o === 'string') return o.indexOf('@/') === 0 ? B + o.slice(2) : o;
+    if (Array.isArray(o)) return o.map(fix);
+    if (o && typeof o === 'object'){ for (var k in o) o[k] = fix(o[k]); } return o; }
+  window.AB_IMG = fix(window.AB_IMG);
+  window.AB_PHOTO = fix(window.AB_PHOTO);
+  window.AB_MOCK = fix(window.AB_MOCK);
+  window.AB_FOIL = fix(window.AB_FOIL);
+  window.AB_STD = fix(window.AB_STD);
+  window.AB_COLLECTION = fix(window.AB_COLLECTION);
+  window.AB_DESIGNS = fix(window.AB_DESIGNS);
+})();
+if (window.AB_START) window.AB_START();
+</script>
+<!-- ===== END ALBUM PREVIEW ===== -->
+
+</body></html>
