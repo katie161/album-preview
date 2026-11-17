@@ -598,7 +598,7 @@ window.AB_START = function(){
     list.forEach(function(d, i){
       var b = document.createElement('button'); b.type = 'button';
       b.className = 'ab-dz' + (state.tab === state.coll && i === state.design ? ' on' : '');
-      b.innerHTML = '<span><img alt="" loading="lazy" decoding="async" src="' + d.thumb + '"></span><em></em>';
+      b.innerHTML = '<span><img alt="" src="' + d.thumb + '"></span><em></em>';
       b.querySelector('em').textContent = d.name;
       b.onclick = function(){ state.coll = state.tab; state.design = i; state.pickerOpen = false; state.view = 'cover'; render(); };
       dz.appendChild(b);
@@ -772,6 +772,11 @@ window.AB_START = function(){
     if (window.ResizeObserver) new ResizeObserver(bleed).observe(root);
     setTimeout(bleed, 300); setTimeout(bleed, 1500);
   })();
+  setTimeout(function(){
+    ['AB_COLLECTION','AB_STD','AB_DESIGNS'].forEach(function(k){
+      (window[k] || []).forEach(function(d){ var u = d.img || d.full; if (u){ var im = new Image(); im.src = u; } });
+    });
+  }, 1500);
   $('ab-pick').addEventListener('click', function(){ state.pickerOpen = !state.pickerOpen; if (state.pickerOpen) state.tab = state.coll; render(); });
   $('ab-close').addEventListener('click', function(){ state.pickerOpen = false; render(); });
   $('ab-overlay').addEventListener('click', function(e){ if (e.target === this){ state.pickerOpen = false; render(); } });
